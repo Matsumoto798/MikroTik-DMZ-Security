@@ -1,0 +1,78 @@
+ip firewall filter
+
+ 0    ;;; Block DMZ to LAN MK
+      chain=forward action=drop connection-state=established,new src-address=10.0.x.x/24 dst-address=192.168.x.x/24 log=no 
+      log-prefix="" 
+
+ 1    ;;; Block DMZ to LAN MK
+      chain=forward action=drop src-address=10.0.x.0/24 dst-address=192.168.x.0/24 log=no log-prefix="" 
+
+ 2    ;;; SSH
+      chain=input action=accept protocol=tcp src-address-list=Admin dst-port=22 log=no log-prefix="" 
+
+ 3    chain=input action=add-src-to-address-list protocol=tcp src-address-list=!Admin address-list=Black_list_SSH 
+      address-list-timeout=none-static dst-port=22 log=yes log-prefix="" 
+
+ 4    chain=input action=drop connection-state=invalid protocol=tcp src-address-list=Black_list_SSH dst-port=22 log=yes 
+      log-prefix="" 
+
+ 5    ;;; *CONEXION POR WINBOX PARA LISTA ADMIN*--**NO CAMBIAR EL  ORDEN DE PRIORIDAD**
+      chain=input action=accept protocol=tcp src-address-list=Admin dst-port=8445 log=no log-prefix="" 
+
+ 6    chain=input action=add-src-to-address-list protocol=tcp src-address-list=!Admin address-list=Black:list_WINBOX 
+      address-list-timeout=none-static dst-port=8445 log=yes log-prefix=""
+7    chain=input action=drop protocol=tcp src-address-list=Black:list_WINBOX log=yes log-prefix="" 
+
+ 8 X  ;;; BGP
+      chain=input action=accept protocol=tcp dst-port=179 log=no log-prefix="" 
+
+ 9    ;;; SNMP
+      chain=input action=accept protocol=udp src-address-list=SNMP dst-port=161 log=no log-prefix="" 
+
+10    chain=input action=drop protocol=udp dst-port=161 log=yes log-prefix="" 
+
+23    ;;; allow echo request
+      chain=icmp action=accept protocol=icmp icmp-options=8:0 log=no log-prefix="" 
+
+24    ;;; allow time exceed
+      chain=icmp action=accept protocol=icmp icmp-options=11:0 log=no log-prefix="" 
+
+25    ;;; allow parameter bad
+      chain=icmp action=accept protocol=icmp icmp-options=12:0 log=no log-prefix="" 
+
+26    ;;; deny all other types
+      chain=icmp action=drop log=no log-prefix="" 
+
+27    ;;; Default deny: bloquear trfico no autorizado
+      chain=input action=drop connection-state=invalid log=no log-prefix="" 
+
+28    ;;; Drop everything
+      chain=input action=drop connection-state=invalid log=no log-prefix="" 
+
+29    chain=ICMP action=accept protocol=icmp icmp-options=3:3 limit=5,5:packet log=no log-prefix="" 
+
+30    chain=ICMP action=accept protocol=icmp icmp-options=3:4 limit=5,5:packet log=no log-prefix="" 
+
+31    chain=ICMP action=accept protocol=icmp icmp-options=8:0 limit=5,5:packet log=no log-prefix="" 
+
+32    chain=ICMP action=accept protocol=icmp icmp-options=11:0 limit=5,5:packet log=no log-prefix="" 
+
+33    chain=input action=drop connection-state=invalid log=no log-prefix="" 
+
+34    ;;; Bloquear ICMP
+      chain=input action=drop protocol=icmp log=no log-prefix="" 
+
+35    ;;; Drop excessive SYN packets in forward chain
+      chain=forward action=drop tcp-flags=syn connection-limit=30,32 protocol=tcp log=no log-prefix="" 
+
+36    ;;; Drop excessive SYN packets
+      chain=input action=drop tcp-flags=syn connection-limit=30,32 protocol=tcp log=no log-prefix="" 
+
+37    ;;; Bloquear conexiones invlidas
+      chain=input action=accept connection-state=established,related log=no log-prefix="" 
+
+38    chain=forward action=drop connection-state=established,related protocol=udp dst-port=53 log=no log-prefix="" 
+
+39    chain=forward action=drop protocol=tcp dst-port=53 log=no log-prefix="" 
+
+40    chain=input action=accept protocol=udp dst-port=13231 log=yes log-prefix="" 
