@@ -1,0 +1,25 @@
+**For now I plan to bridge networks to segment that way, I plan to use PPPOE and VLANS, instead of the current configuration, I will update it as I go along.**
+
+# MikroTik Firewall Rules Overview:
+
+## Blocking DMZ to LAN Traffic:
+
+These rules prevent devices within the Demilitarized Zone (DMZ) (e.g., 10.0.x.x/24) from accessing the internal Local Area Network (LAN) (192.168.x.x/24). This segregation safeguards internal resources from potential threats originating in the DMZ.​
+## SSH Access Management:
+
+SSH access (port 22) is permitted exclusively from IP addresses listed in the Admin address list. Attempts from other sources are logged, and unauthorized IPs are added to a blacklist (Black_list_SSH), enhancing remote access security.​
+## Winbox Access Control:
+
+Access to the MikroTik administrative interface (Winbox) on port 8445 is restricted to IPs in the Admin list. Unauthorized connection attempts are logged, and offending IPs are added to Black:list_WINBOX, preventing unauthorized configuration changes.​
+## Specific Protocol Management:
+
+Inbound connections for Border Gateway Protocol (BGP) on port 179 and Simple Network Management Protocol (SNMP) on port 161 are allowed from authorized sources (SNMP address list). This facilitates standard network management and monitoring.​
+## ICMP Traffic Handling:
+
+Rules are established to permit specific Internet Control Message Protocol (ICMP) types, such as echo requests (ping) and time-exceeded messages, while blocking others. This approach aids in network diagnostics and mitigates potential attack vectors.​
+## Default Deny Policies:
+
+Rules are implemented to drop unauthorized or invalid traffic, establishing a security posture where, by default, all unspecified traffic is denied. This ensures that only explicitly permitted traffic is allowed.​
+## Protection Against Excessive SYN Packets:
+
+Rules are in place to drop excessive SYN packets, preventing potential Denial-of-Service (DoS) attacks that could overwhelm the router's resources.
