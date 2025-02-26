@@ -58,5 +58,5 @@ add interval=23h name=BACKUP-CONFIG on-event="# Obtener la fecha actual (formato
     \n\r\
     \n" policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-time=startup
 /tool e-mail
-
+set from=UREMAIL@GMAIL.COM port=587 server=smtp.zoho.com tls=starttls user=UREMAIL@GMAIL.COM
 ```
