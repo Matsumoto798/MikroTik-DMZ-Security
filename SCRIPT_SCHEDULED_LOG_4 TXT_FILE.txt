@@ -1,0 +1,9 @@
+:local filename ([/system identity get name] . "_logs_" . [/system clock get date] . ".txt");
+
+/log print file=$filename;
+:delay 10s;
+/tool e-mail send to="uremail@email.com" subject="Logs de $[/system identity get name]" \
+body="Mikrotik $[/system identity get name]: archivo de logs generado el $[/system clock get date] - $[/system clock get time]" \
+file=$filename;
+:delay 45s;
+/file remove $filename;
