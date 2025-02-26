@@ -1,0 +1,23 @@
+# Obtener la fecha actual (formato "YY/MM/DD")
+:local dateStr [/system clock get date];
+
+# Crear el nombre del archivo de exportación con fecha en formato YY-MM-DD
+:local CONFIG ([/system identity get name] . "_export_" . [/system clock get date]);
+
+/export file=$CONFIG;
+:delay 7s;
+/tool e-mail send to="matsumoto798.zoho@zohomail.com" subject="$[/system identity get name] export" \
+body="Mikrotik $[/system identity get name]: configuration file on $[/system clock get date] - $[/system clock get time]" file=$CONFIG;
+
+# Crear el nombre del archivo de backup con fecha en formato YY-MM-DD
+:local backup ([/system identity get name] . "_backup_" . [/system clock get date]);
+
+/system backup save name=$backup;
+:delay 7s;
+/tool e-mail send to="matsumoto798.zoho@zohomail.com" subject="$[/system identity get name] backup" \
+body="Mikrotik $[/system identity get name]: backup file on $[/system clock get date] - $[/system clock get time]" file=$backup;
+
+:delay 5s;
+/file remove $CONFIG;
+/file remove $backup;
+
