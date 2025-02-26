@@ -6,7 +6,7 @@
 
 /export file=$CONFIG;
 :delay 7s;
-/tool e-mail send to="matsumoto798.zoho@zohomail.com" subject="$[/system identity get name] export" \
+/tool e-mail send to="UREMAIL@MAIL.COM" subject="$[/system identity get name] export" \
 body="Mikrotik $[/system identity get name]: configuration file on $[/system clock get date] - $[/system clock get time]" file=$CONFIG;
 
 # Crear el nombre del archivo de backup con fecha en formato YY-MM-DD
@@ -14,7 +14,7 @@ body="Mikrotik $[/system identity get name]: configuration file on $[/system clo
 
 /system backup save name=$backup;
 :delay 7s;
-/tool e-mail send to="matsumoto798.zoho@zohomail.com" subject="$[/system identity get name] backup" \
+/tool e-mail send to="UREMAIL@MAIL.COM" subject="$[/system identity get name] backup" \
 body="Mikrotik $[/system identity get name]: backup file on $[/system clock get date] - $[/system clock get time]" file=$backup;
 
 :delay 5s;
